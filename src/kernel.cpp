@@ -38,7 +38,7 @@ enum vga_color
  *
  * Create a 8 bytes color for vga input.
  *
- * Merge foreground and background color in a single 8 bytes variables. 
+ * Merge foreground and background color in a single 8 bytes variables.
  *
  * bytes :  1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
  * values: bg |bg |bg |bg |fg |fg |fg |fg
@@ -117,20 +117,29 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
 }
 
 
-/*terminal_writestring
- *--------------------
+/*terminal_putchar
+ *----------------
  *
  * Write a char in the terminal and move cursor accordingly
  */
 void terminal_putchar(char c)
 {
-    terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-    if(++terminal_column == VGA_WIDTH)
+    if(c == '\n')
     {
         terminal_column = 0;
         if(++terminal_row == VGA_HEIGHT)
         {
             terminal_row = 0;
+        }
+    } else {
+        terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+        if(++terminal_column == VGA_WIDTH)
+        {
+            terminal_column = 0;
+            if(++terminal_row == VGA_HEIGHT)
+            {
+                terminal_row = 0;
+            }
         }
     }
 }
@@ -157,5 +166,9 @@ extern "C"
 void kernel_main()
 {
     terminal_initialize();
+    for(size_t i = 0; i < 25; i++)
+    {
+        terminal_writestring("Hello World!\n");
+    }
     terminal_writestring("Hello, kernel World!");
 }
