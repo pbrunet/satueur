@@ -1,0 +1,39 @@
+====
+MyOS
+====
+
+Abstract
+--------
+
+To have a better knowledge of my computer, I try to build an OS. It will never
+be a "production" OS or a commercial one, it is only to improve my knowledge of
+computers.
+
+Be careful
+----------
+
+A lot of error will happen during the project, here are some solution but this
+list should be improve :
+
+Cross-compiler
+~~~~~~~~~~~~~~
+
+Why `binutils` compilation fails?
+
+I go through 2 errors. First, the configure line should be :
+    $> ../configure --target=$TARGET --prefix="$PREFIX" --disable-nls --disable-werror
+
+from the build directory.
+
+Also, is TARGET_ALIAS doesn't exist, look at you C_INCLUDE_PATH. It should not
+finish with `:`
+
+Why `gcc` compilation fails?
+
+Be careful, LIBRARY_PATH, C_INCLUDE_PATH and CPLUS_INCLUDE_PATH should not be
+set
+
+Bibliography
+------------
+
+[0] http://wiki.osdev.org/
