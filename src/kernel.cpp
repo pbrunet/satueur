@@ -117,10 +117,28 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
 }
 
 
+/*terminal_scrollup
+ *-----------------
+ *
+ * Scroll text up for one line in the terminal.
+ */
+void terminal_scrollup()
+{
+    for(size_t y = 1; y < VGA_HEIGHT; y++)
+    {
+        for(size_t x = 0; x < VGA_WIDTH; x++)
+        {
+            const size_t index = y * VGA_WIDTH + x;
+            terminal_buffer[index] = terminal_buffer[index - VGA_WIDTH];
+        }
+    }
+}
+
+
 /*terminal_putchar
  *----------------
  *
- * Write a char in the terminal and move cursor accordingly
+ * Write a char in the terminal and move cursor and view accordingly
  */
 void terminal_putchar(char c)
 {
@@ -129,7 +147,8 @@ void terminal_putchar(char c)
         terminal_column = 0;
         if(++terminal_row == VGA_HEIGHT)
         {
-            terminal_row = 0;
+            terminal_row--;
+            terminal_scrollup();
         }
     } else {
         terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
@@ -138,11 +157,13 @@ void terminal_putchar(char c)
             terminal_column = 0;
             if(++terminal_row == VGA_HEIGHT)
             {
-                terminal_row = 0;
+                terminal_row--;
+                terminal_scrollup();
             }
         }
     }
 }
+
 
 /*terminal_writestring
  *--------------------
