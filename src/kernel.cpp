@@ -8,10 +8,11 @@
 
 /* For now, it only work for the 32-bit x86 targets. */
 #if !defined(__i386__)
-#error "This tutorial needs to be compiled with a ix86-elf compiler"
+#error "This kernel needs to be compiled with a ix86-elf compiler"
 #endif
 
 #include "Terminal.h"
+#include "inout.h"
 
 
 /*kernel_main
@@ -27,5 +28,6 @@ void kernel_main()
     {
         terminal.write("Hello World!\n");
     }
-    terminal.write("Hello, kernel World!");
+    terminal.write("Hello, kernel World!\n");
+    terminal.write("\n\n");
 }

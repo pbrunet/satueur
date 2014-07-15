@@ -1,4 +1,5 @@
 #include "Terminal.h"
+#include "inout.h"
 
 
 uint8_t Terminal::make_color(enum vga_color fg, enum vga_color bg)
@@ -56,7 +57,7 @@ void Terminal::scrollup()
 }
 
 
-void Terminal::write(char c)
+void Terminal::print(char c)
 {
     if(c == '\n')
     {
@@ -85,6 +86,25 @@ void Terminal::write(const char* data)
 {
     size_t i = 0;
     while(data[i] != 0)
-        write(data[i++]);
+        print(data[i++]);
+    update_cursor();
 }
 
+
+void Terminal::write(char c)
+{
+    print(c);
+    update_cursor();
+}
+
+void Terminal::update_cursor()
+{
+    unsigned short position=(row * VGA_WIDTH) + column;
+     
+    // cursor LOW port to vga INDEX register
+    outb(0x0F, 0x3D4);
+    outb((unsigned char)(position & 0xFF), 0x3D5);
+    // cursor HIGH port to vga INDEX register
+    outb(0x0E, 0x3D4);
+    outb((unsigned char )((position>>8) & 0xFF), 0x3D5);
+}

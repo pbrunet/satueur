@@ -53,7 +53,7 @@ class Terminal
         /*write
          *-----
          *
-         * Write a char in the terminal and move cursor and view accordingly
+         * Write a char in the terminal and update location and view accordingly
          */
         void write(char c);
 
@@ -98,6 +98,20 @@ class Terminal
          * Scroll text up for one line in the terminal.
          */
         void scrollup();
+
+        /*print
+         *-----
+         *
+         * print a character in the terminal and update location
+         */
+        void print(char c);
+
+        /*update_cursor
+         *-------------
+         *
+         * update the cursor location according to current location
+         */
+        void update_cursor();
 
         ///Attributs
         
