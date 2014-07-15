@@ -45,8 +45,13 @@ void Terminal::scrollup()
         for(size_t x = 0; x < VGA_WIDTH; x++)
         {
             const size_t index = y * VGA_WIDTH + x;
-            buffer[index] = buffer[index - VGA_WIDTH];
+            buffer[index - VGA_WIDTH] = buffer[index];
         }
+    }
+    for(size_t x = 1; x <= VGA_WIDTH; x++)
+    {
+        const size_t index = VGA_HEIGHT * VGA_WIDTH - x;
+        buffer[index] = make_vgaentry(' ');
     }
 }
 
