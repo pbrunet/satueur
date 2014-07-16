@@ -113,6 +113,13 @@ class Terminal
          */
         void update_cursor();
 
+        /*clear
+         *-----
+         *
+         * Set all character to empty space in the buffer
+         */
+        void clear();
+
         ///Attributs
         
         // Current row location

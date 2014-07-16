@@ -22,6 +22,12 @@ Terminal::Terminal():
     color(make_color(COLOR_LIGHT_GREY, COLOR_BLACK)),
     buffer((uint16_t*) 0xB8000)  // hardware VGA buffer location
 {
+    clear();
+}
+
+
+void Terminal::clear()
+{
     for(size_t y = 0; y < VGA_HEIGHT; y++)
     {
         for(size_t x = 0; x < VGA_WIDTH; x++)
@@ -67,6 +73,19 @@ void Terminal::print(char c)
             row--;
             scrollup();
         }
+    } else if(c == '\b')
+    {
+        column = column ? column - 1 : column;
+    } else if(c == '\t')
+    {
+        column += 4 - column % 4;
+        row += column / 80;
+        column = column % 80;
+    } else if(c == '\f')
+    {
+        clear();
+        column = 0;
+        row = 0;
     } else {
         putentryat(c, column, row);
         if(++column == VGA_WIDTH)

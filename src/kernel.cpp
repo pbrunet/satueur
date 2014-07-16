@@ -24,10 +24,15 @@ extern "C"
 void kernel_main()
 {
     Terminal terminal;
+    terminal.write("Hello, kernel World!\b");
+    terminal.write("a\n\b");
+    terminal.write("\tlato\tla\b\b\bpppp");
+    terminal.write("\f");
     for(size_t i = 0; i < 25; i++)
     {
         terminal.write("Hello World!\n");
     }
-    terminal.write("Hello, kernel World!\n");
-    terminal.write("\n\n");
+    terminal.write("Hello, kernel World!\b");
+    terminal.write("a\n\b");
+    terminal.write("\tlato\tla\b\b\bpppp");
 }
