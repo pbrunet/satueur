@@ -13,6 +13,7 @@
 
 #include "Terminal.h"
 #include "inout.h"
+#include "gdt.h"
 
 
 /*kernel_main
@@ -35,4 +36,5 @@ void kernel_main(struct multiboot *mboot_ptr)
     terminal.write("Hello, kernel World!\b");
     terminal.write("a\n\b");
     terminal.write("\tlato\tla\b\b\bpppp");
+    GDT();
 }
