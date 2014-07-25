@@ -41,11 +41,15 @@ _start:
 	# our stack (as it grows downwards).
 	movl $stack_top, %esp
 
+	# Push the boot data structure
+	push %ebx
+
 	# Finally, we will start the c++ kernel
 	call kernel_main
 
 	# In case the function returns, we'll want to put the computer into an
-	# infinite loop to not halt without message
+	# infinite loop to not halt without message and avoid executing garbage
+	# in memory
 	cli
 	hlt
 .Lhang:

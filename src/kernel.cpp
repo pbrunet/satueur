@@ -21,7 +21,7 @@
  * Startup function for the kernel.
  */
 extern "C"
-void kernel_main()
+void kernel_main(struct multiboot *mboot_ptr)
 {
     Terminal terminal;
     terminal.write("Hello, kernel World!\b");

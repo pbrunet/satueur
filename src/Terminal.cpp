@@ -1,5 +1,20 @@
 #include "Terminal.h"
 #include "inout.h"
+#include "common.h"
+
+
+// hardware VGA buffer location
+constexpr uint16_t* VGA_BUFFER = reinterpret_cast<uint16_t*>(0xB8000);
+
+enum VGA_PORT: uint16_t {
+    CURSOR_BYTE_POS=0x3D4,
+    CURSOR_POS=0x3D5
+};
+
+enum BYTE_POS: uint8_t {
+    LOW=0x0F,
+    HIGH=0x0E
+};
 
 
 uint8_t Terminal::make_color(enum vga_color fg, enum vga_color bg)
@@ -20,7 +35,7 @@ Terminal::Terminal():
     row(0),
     column(0),
     color(make_color(COLOR_LIGHT_GREY, COLOR_BLACK)),
-    buffer((uint16_t*) 0xB8000)  // hardware VGA buffer location
+    buffer(VGA_BUFFER)
 {
     clear();
 }
@@ -47,14 +62,7 @@ void Terminal::putentryat(char c, size_t x, size_t y)
 
 void Terminal::scrollup()
 {
-    for(size_t y = 1; y < VGA_HEIGHT; y++)
-    {
-        for(size_t x = 0; x < VGA_WIDTH; x++)
-        {
-            const size_t index = y * VGA_WIDTH + x;
-            buffer[index - VGA_WIDTH] = buffer[index];
-        }
-    }
+    memmove(buffer + VGA_WIDTH, buffer, (VGA_HEIGHT - 1) * VGA_WIDTH);
     for(size_t x = 1; x <= VGA_WIDTH; x++)
     {
         const size_t index = VGA_HEIGHT * VGA_WIDTH - x;
@@ -119,11 +127,11 @@ void Terminal::write(char c)
 void Terminal::update_cursor()
 {
     unsigned short position=(row * VGA_WIDTH) + column;
-     
+
     // cursor LOW port to vga INDEX register
-    outb(0x0F, 0x3D4);
-    outb((unsigned char)(position & 0xFF), 0x3D5);
+    outb(BYTE_POS::LOW, VGA_PORT::CURSOR_BYTE_POS);
+    outb((unsigned char)(position & 0xFF), VGA_PORT::CURSOR_POS);
     // cursor HIGH port to vga INDEX register
-    outb(0x0E, 0x3D4);
-    outb((unsigned char )((position>>8) & 0xFF), 0x3D5);
+    outb(BYTE_POS::HIGH, VGA_PORT::CURSOR_BYTE_POS);
+    outb((unsigned char)((position>>8) & 0xFF), VGA_PORT::CURSOR_POS);
 }

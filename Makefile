@@ -5,16 +5,21 @@ OS_BIN=myos.bin
 
 AS=$(TARGET)-as
 CXX=$(TARGET)-g++
+CC=$(TARGET)-gcc
 
 CXXFLAGS= -std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
+CFLAGS= -std=c11 -ffreestanding -O2 -Wall -Wextra
 CPPFLAGS= -I$(TOP_SRC_DIR)/include
-LDFLAGS=-lgcc
+LDFLAGS= -lgcc
 
 CPP_FILES=$(wildcard src/*.cpp)
 OBJS=$(subst src/,obj/,$(subst .cpp,.o,$(CPP_FILES)))
 
 AS_FILES=$(wildcard src/*.s)
 OBJS+=$(subst src/,obj/,$(subst .s,.o,$(AS_FILES)))
+
+C_FILES=$(wildcard src/*.c)
+OBJS+=$(subst src/,obj/,$(subst .c,.o,$(C_FILES)))
 
 all: $(OS_BIN)
 
@@ -26,6 +31,9 @@ obj/%.o: src/%.s
 
 obj/%.o: src/%.cpp
 	$(CXX) -c $^ -o $@ $(CPPFLAGS) $(CXXFLAGS)
+
+obj/%.o: src/%.c
+	$(CC) -c $^ -o $@ $(CPPFLAGS) $(CFLAGS)
 
 clean:
 	rm -f obj/* || true
