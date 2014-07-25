@@ -25,16 +25,6 @@ extern "C"
 void kernel_main(struct multiboot *mboot_ptr)
 {
     Terminal terminal;
-    terminal.write("Hello, kernel World!\b");
-    terminal.write("a\n\b");
-    terminal.write("\tlato\tla\b\b\bpppp");
-    terminal.write("\f");
-    for(size_t i = 0; i < 25; i++)
-    {
-        terminal.write("Hello World!\n");
-    }
-    terminal.write("Hello, kernel World!\b");
-    terminal.write("a\n\b");
-    terminal.write("\tlato\tla\b\b\bpppp");
+    Terminal::write("Starting kernel\n");
     GDT();
 }

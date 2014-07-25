@@ -39,23 +39,39 @@ class Terminal
          *
          * Initialize terminal setting cursor at upper right corner and setting
          * the default color. Fill the VGA buffer with space as it could be
-         * unititialize.
+         * uninitialized.
+         *
+         * Terminal save current buffer to enable use of it from everywhere.
+         * It can't be done with singleton as new allocator doesn't exist for
+         * now.
          */
         Terminal();
+
+        /*get
+         *----
+         * Get the current Terminal instance if exists or create it
+         */
+        static Terminal* get();
 
         /*write
          *-----
          *
          * Write the given string in the terminal.
          */
-        void write(const char* data);
+        static void write(const char* data);
 
         /*write
          *-----
          *
          * Write a char in the terminal and update location and view accordingly
          */
-        void write(char c);
+        static void write(char c);
+
+        /*finalize
+         *--------
+         *Remove the current Terminal.
+         */
+        static void finalize();
 
     private:
         ///Methods
@@ -121,7 +137,8 @@ class Terminal
         void clear();
 
         ///Attributs
-        
+
+        static Terminal* m_instance;
         // Current row location
         size_t row;
         // Current column location
@@ -130,7 +147,7 @@ class Terminal
         uint8_t color;
         // VGA buffer to write text
         uint16_t* buffer;
-        
+
 };
 
 #endif

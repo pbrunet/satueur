@@ -7,7 +7,7 @@ AS=$(TARGET)-as
 CXX=$(TARGET)-g++
 CC=$(TARGET)-gcc
 
-CXXFLAGS= -std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
+CXXFLAGS= -std=c++11 -ffreestanding -O1 -Wall -Wextra -fno-exceptions -fno-rtti
 CFLAGS= -std=c11 -ffreestanding -O2 -Wall -Wextra
 CPPFLAGS= -I$(TOP_SRC_DIR)/include
 LDFLAGS= -lgcc

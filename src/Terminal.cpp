@@ -17,6 +17,9 @@ enum BYTE_POS: uint8_t {
 };
 
 
+Terminal* Terminal::m_instance = nullptr;
+
+
 uint8_t Terminal::make_color(enum vga_color fg, enum vga_color bg)
 {
     return fg | bg << 4;
@@ -37,6 +40,7 @@ Terminal::Terminal():
     color(make_color(COLOR_LIGHT_GREY, COLOR_BLACK)),
     buffer(VGA_BUFFER)
 {
+    m_instance = this;
     clear();
 }
 
@@ -113,15 +117,15 @@ void Terminal::write(const char* data)
 {
     size_t i = 0;
     while(data[i] != 0)
-        print(data[i++]);
-    update_cursor();
+        m_instance->print(data[i++]);
+    m_instance->update_cursor();
 }
 
 
 void Terminal::write(char c)
 {
-    print(c);
-    update_cursor();
+    m_instance->print(c);
+    m_instance->update_cursor();
 }
 
 void Terminal::update_cursor()
@@ -134,4 +138,14 @@ void Terminal::update_cursor()
     // cursor HIGH port to vga INDEX register
     outb(BYTE_POS::HIGH, VGA_PORT::CURSOR_BYTE_POS);
     outb((unsigned char)((position>>8) & 0xFF), VGA_PORT::CURSOR_POS);
+}
+
+Terminal* Terminal::get()
+{
+    return m_instance;
+}
+
+void Terminal::finalize()
+{
+    m_instance = nullptr;
 }
