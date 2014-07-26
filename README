@@ -33,6 +33,18 @@ Why `gcc` compilation fails?
 Be careful, LIBRARY_PATH, C_INCLUDE_PATH and CPLUS_INCLUDE_PATH should not be
 set
 
+GAS Syntax
+----------
+
+Assembly use is GAS syntax. Many information can be found on the internet but
+here is a reminder.
+
+- registers are prefixed by % : %eax
+- constant are prefixed by $ : $8 or $0x8
+- operand order are src dest : movl $8 %eax will move 8 to the register eax
+- instruction may have suffix b for byte(8), w for word(16), l for long(32) : pushl
+
+
 Bibliography
 ------------
 

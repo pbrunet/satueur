@@ -26,5 +26,5 @@ void kernel_main(struct multiboot *mboot_ptr)
 {
     Terminal terminal;
     Terminal::write("Starting kernel\n");
-    GDT();
+    volatile GDT mygdt;
 }

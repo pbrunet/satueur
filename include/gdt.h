@@ -84,7 +84,7 @@ class GDT {
         };
 
         constexpr static uint32_t MAX_LIMIT = 0xFFFFF;
-        constexpr static size_t NB_ENTRIES = 5;
+        constexpr static uint16_t NB_ENTRIES = 5;
 
         GDT();
 
