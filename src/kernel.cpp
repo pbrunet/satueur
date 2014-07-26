@@ -14,6 +14,7 @@
 #include "Terminal.h"
 #include "inout.h"
 #include "gdt.h"
+#include "idt.h"
 
 
 /*kernel_main
@@ -27,4 +28,8 @@ void kernel_main(struct multiboot *mboot_ptr)
     Terminal terminal;
     Terminal::write("Starting kernel\n");
     volatile GDT mygdt;
+    volatile IDT myidt;
+    asm volatile ("int $0x3");
+    asm volatile ("int $0x4");
+    Terminal::write("Kernel initialized\n");
 }
