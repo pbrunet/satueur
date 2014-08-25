@@ -2,7 +2,6 @@
 .global isr\num
 .type isr\num, @function
 isr\num:
-    cli
     push $0
     push $\num
     jmp isr_common_stub
@@ -12,7 +11,6 @@ isr\num:
 .global isr\num
 .type isr\num, @function
 isr\num:
-    cli
     push $\num
     jmp isr_common_stub
 .endm
@@ -59,26 +57,27 @@ isr_common_stub:
     # This is our common ISR stub. It saves the processor state, sets
     # up for kernel mode segments, calls the C-level fault handler,
     # and finally restores the stack frame.
-    pusha                    # Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
+    pusha            # Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
 
-    movw %ds, %ax               # Lower 16-bits of eax = ds.
-    pushl %eax                 # save the data segment descriptor
+    movw %ds, %ax    # Lower 16-bits of eax = ds.
+    pushl %eax       # save the data segment descriptor
 
     movw $0x10, %ax  # load the kernel data segment descriptor
     movw %ax, %ds
     movw %ax, %es
     movw %ax, %fs
     movw %ax, %gs
+    pushl %esp
 
     call isr_handler
 
+    addl $4, %esp    # Cleans up the register_t pointer pushed as parameter
     popl %eax        # reload the original data segment descriptor
     movw %ax, %ds
     movw %ax, %es
     movw %ax, %fs
     movw %ax, %gs
 
-    popa                     # Pops edi,esi,ebp...
+    popa              # Pops edi,esi,ebp...
     addl $8, %esp     # Cleans up the pushed error code and pushed ISR number
-    sti
-    iret           # pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
+    iret              # pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP

@@ -8,9 +8,9 @@
 #include "Terminal.h"
 
 // This gets called from our ASM interrupt handler stub.
-void isr_handler(registers_t regs)
+void isr_handler(registers_t* regs)
 {
     Terminal::write("recieved interrupt: ");
-    Terminal::write((char)('0' + regs.int_no));
+    Terminal::write((char)('0' + regs->int_no));
     Terminal::write("\n");
 }
