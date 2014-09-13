@@ -25,11 +25,18 @@
 extern "C"
 void kernel_main(struct multiboot *mboot_ptr)
 {
+    asm volatile ("cli");
     Terminal terminal;
     Terminal::write("Starting kernel\n");
     volatile GDT mygdt;
-    volatile IDT myidt;
+    IDT myidt;
     asm volatile ("int $0x3");
     asm volatile ("int $0x4");
+    myidt.set_timer(4);
     Terminal::write("Kernel initialized\n");
+
+    // We will use interruption. make sur they are not blocked.
+    asm volatile ("sti");
+
+    while(true);
 }

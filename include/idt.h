@@ -50,15 +50,49 @@ class IDT {
             RING_3=0x60,
             F_BASE=0x8E
         };
+        
+        // Ports use to communicate with PIC master and slaves controllers.
+        // DATA access interrupt mask. COMMAND is about general settings.
+        enum pic_port: uint8_t {
+            PIC_MASTER_DATA=0x21,
+            PIC_MASTER_COMMAND=0x20,
+            PIC_SLAVE_DATA=0xA1,
+            PIC_SLAVE_COMMAND=0xA0,
+            PIT_COMMAND=0x43,
+            PIT_CHAN0_DATA=0x40
+        };
+
+        // Initialisation word 1 for PIC communication.
+        // ICW1 : Global initialisation
+        enum pic_icw1: uint8_t {
+            ICW1_INIT=0x10, // Base initialization
+            ICW1_ICW4=0x01, // Need ICW4
+        };
+
+        // Initialisation word 4 for PIC communication.
+        // ICW4 : Gives additional information about the environment.
+        enum pic_icw4: uint8_t {
+            ICW4_8086=0x01, // Use 8086 mode
+        };
+
+        enum pic_command: uint8_t {
+            PIC_EOI=0x20, // End of interruption signal
+            PIT_REPEAT=0x36, // Set PIT to repeat mode and ask for speed
+        };
 
         constexpr static uint16_t NB_ENTRIES = 256;
 
         IDT();
+        void set_timer(uint32_t freq);
 
     private:
         entry_t m_entries[NB_ENTRIES];
         ptr_t m_ptr;
         void add_entry(size_t i, uint32_t isr, uint16_t selector, uint8_t flags);
+
+        /* reinitialize the PIC controllers, giving them specified vector offsets
+         * rather than 8h and 70h, as configured by default */
+        void PIC_remap(uint8_t offset1, uint8_t offset2);
 };
 
 // These extern directives let us access the addresses of our ASM ISR handlers.
@@ -94,6 +128,23 @@ extern "C" void isr28();
 extern "C" void isr29();
 extern "C" void isr30();
 extern "C" void isr31();
+
+extern "C" void irq32();
+extern "C" void irq33();
+extern "C" void irq34();
+extern "C" void irq35();
+extern "C" void irq36();
+extern "C" void irq37();
+extern "C" void irq38();
+extern "C" void irq39();
+extern "C" void irq40();
+extern "C" void irq41();
+extern "C" void irq42();
+extern "C" void irq43();
+extern "C" void irq44();
+extern "C" void irq45();
+extern "C" void irq46();
+extern "C" void irq47();
 
 extern "C" void idt_flush(uint32_t);
 
