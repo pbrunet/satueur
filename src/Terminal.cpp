@@ -66,7 +66,7 @@ void Terminal::putentryat(char c, size_t x, size_t y)
 
 void Terminal::scrollup()
 {
-    memmove(buffer + VGA_WIDTH, buffer, (VGA_HEIGHT - 1) * VGA_WIDTH);
+    memmove(buffer, buffer + VGA_WIDTH, (VGA_HEIGHT - 1) * VGA_WIDTH);
     for(size_t x = 1; x <= VGA_WIDTH; x++)
     {
         const size_t index = VGA_HEIGHT * VGA_WIDTH - x;
