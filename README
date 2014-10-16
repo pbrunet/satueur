@@ -1,6 +1,5 @@
-====
-MyOS
-====
+Satueur
+=======
 
 Abstract
 --------
@@ -9,29 +8,81 @@ To have a better knowledge of my computer, I try to build an OS. It will never
 be a "production" OS or a commercial one, it is only to improve my knowledge of
 computers.
 
-Be careful
-----------
+Only i686-elf arch is currently deploy.
 
-A lot of error will happen during the project, here are some solution but this
-list should be improve :
+Note: this README use asciidoc syntax. Install it and run a2x to get a PDF 
+version of this file.
+
+Prerequisite
+------------
+
+Tested with the binutils/gcc couple :
+
+       * binutils 2.24 - gcc 4.9.1 
+
+
+Tested with the emulator :
+
+       * QEMU 1.1.2
+
+Binutils
+~~~~~~~~
+
+Compilation and install steps for binutils:
+
+----
+export PREFIX="$HOME/opt/cross"
+export TARGET=i686-elf
+export PATH="$PREFIX/bin:$PATH"
+
+cd ~/opt/src
+mkdir build-binutils
+cd build-binutils
+../binutils-x.xx/configure --target=$TARGET --prefix="$PREFIX" \
+			   --with-sysroot --disable-nls --disable-werror
+make
+make install
+cd ..
+----
 
 Cross-compiler
 ~~~~~~~~~~~~~~
 
-Why `binutils` compilation fails?
+Compilation and install steps for gcc:
 
-I go through 2 errors. First, the configure line should be :
-    $> ../configure --target=$TARGET --prefix="$PREFIX" --disable-nls --disable-werror
+----
+export PREFIX="$HOME/opt/cross"
+export TARGET=i686-elf
+export PATH="$PREFIX/bin:$PATH"
 
-from the build directory.
+cd ~/opt/src
+mkdir build-gcc
+cd build-gcc
+../gcc-x.x.x/configure --target=$TARGET --prefix="$PREFIX" --disable-nls \
+		       --enable-languages=c,c++ --without-headers
+make all-gcc
+make all-target-libgcc
+make install-gcc
+make install-target-libgcc
+cd ..
+----
 
-Also, is TARGET_ALIAS doesn't exist, look at you C_INCLUDE_PATH. It should not
-finish with `:`
+Satueur compilation
+-------------------
 
-Why `gcc` compilation fails?
+----
+export PATH=$PATH:$HOME/opt/cross/bin
+make
+----
 
-Be careful, LIBRARY_PATH, C_INCLUDE_PATH and CPLUS_INCLUDE_PATH should not be
-set
+Emulator
+--------
+
+After the _satueur_ compilation step, run :
+
+----
+qemu-system-x86_64 -kernel satueur.bin
+----
 
 GAS Syntax
 ----------
@@ -39,13 +90,16 @@ GAS Syntax
 Assembly use is GAS syntax. Many information can be found on the internet but
 here is a reminder.
 
-- registers are prefixed by % : %eax
-- constant are prefixed by $ : $8 or $0x8
-- operand order are src dest : movl $8 %eax will move 8 to the register eax
-- instruction may have suffix b for byte(8), w for word(16), l for long(32) : pushl
+* registers are prefixed by % : %eax
+* constant are prefixed by $ : $8 or $0x8
+* operand order are src dest : movl $8 %eax will move 8 to the register eax
+* instruction may have suffix b for byte(8), w for word(16), l for 
+  long(32) : pushl
 
+Links
+-----
 
-Bibliography
-------------
+http://wiki.osdev.org
 
-[0] http://wiki.osdev.org/
+http://www.jamesmolloy.co.uk/tutorial_html/
+

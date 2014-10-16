@@ -1,7 +1,7 @@
 TOP_SRC_DIR=.
 
 TARGET=i686-elf
-OS_BIN=myos.bin
+OS_BIN=satueur.bin
 
 AS=$(TARGET)-as
 CXX=$(TARGET)-g++
@@ -24,7 +24,8 @@ OBJS+=$(subst src/,obj/,$(subst .c,.o,$(C_FILES)))
 all: $(OS_BIN)
 
 $(OS_BIN): $(OBJS) linker/linker.ld
-	$(CXX) -T linker/linker.ld -o $(OS_BIN) -ffreestanding -O2 -nostdlib $(OBJS) $(LDFLAGS)
+	$(CXX) -T linker/linker.ld -o $(OS_BIN) -ffreestanding -O2 \
+		-nostdlib $(OBJS) $(LDFLAGS)
 
 obj/%.o: src/%.s
 	$(AS) $^ -o $@
@@ -35,8 +36,11 @@ obj/%.o: src/%.cpp
 obj/%.o: src/%.c
 	$(CC) -c $^ -o $@ $(CPPFLAGS) $(CFLAGS)
 
-clean:
+clean-doc:
+	rm -f *.pdf
+
+clean: clean-doc
 	rm -f obj/* || true
-	rm $(OS_BIN)
+	rm -f $(OS_BIN)
 
 .PHONY: clean
