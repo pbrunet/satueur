@@ -8,13 +8,13 @@ To have a better knowledge of my computer, I try to build an OS. It will never
 be a "production" OS or a commercial one, it is only to improve my knowledge of
 computers.
 
-Only i686-elf arch is currently deploy.
+Only i686-elf arch is currently deployed.
 
 Note: this README use asciidoc syntax. Install it and run a2x to get a PDF 
 version of this file.
 
-Prerequisite
-------------
+Prerequisites
+-------------
 
 Tested with the binutils/gcc couple :
 
@@ -87,7 +87,7 @@ qemu-system-x86_64 -kernel satueur.bin
 GAS Syntax
 ----------
 
-Assembly use is GAS syntax. Many information can be found on the internet but
+Assembly used is GAS syntax. Many information can be found on the internet but
 here is a reminder.
 
 * registers are prefixed by % : %eax
