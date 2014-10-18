@@ -4,7 +4,6 @@
 //
 
 #include <console/Console.hpp>
-
 #include <descriptors/isr.h>
 
 // This gets called from our ASM interrupt handler stub.

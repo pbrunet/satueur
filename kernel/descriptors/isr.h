@@ -7,7 +7,7 @@
 #define ISR_H
 
 #include <tools/common.h>
-#include "registers.h"
+#include <descriptors/registers.h>
 
 extern "C" void isr_handler(registers_t*);
 #endif

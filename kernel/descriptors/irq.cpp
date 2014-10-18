@@ -5,7 +5,7 @@
 
 #include <console/Console.hpp>
 #include <tools/inout.h>
-#include <descriptors/idt.h>
+#include <descriptors/IDT.hpp>
 #include <descriptors/irq.h>
 
 // This gets called from our ASM interrupt handler stub.
