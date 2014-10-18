@@ -1,6 +1,6 @@
 #include "idt.h"
-#include "common.h"
-#include "inout.h"
+#include <tools/common.h>
+#include <tools/inout.h>
 
 
 //0x08 Means the code section set by the gdt

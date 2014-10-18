@@ -11,10 +11,10 @@
 #error "This kernel needs to be compiled with a ix86-elf compiler"
 #endif
 
-#include "Terminal.h"
-#include "inout.h"
-#include "gdt.h"
-#include "idt.h"
+#include "console/Terminal.h"
+#include "tools/inout.h"
+#include "descriptors/gdt.h"
+#include "descriptors/idt.h"
 
 
 /*kernel_main
@@ -23,7 +23,7 @@
  * Startup function for the kernel.
  */
 extern "C"
-void kernel_main(struct multiboot *mboot_ptr)
+void kernel_main(struct multiboot */*mboot_ptr*/)
 {
     asm volatile ("cli");
     Terminal terminal;

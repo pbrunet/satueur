@@ -1,5 +1,5 @@
 #include "gdt.h"
-#include "Terminal.h"
+#include <console/Terminal.h>
 
 GDT::GDT()
 {

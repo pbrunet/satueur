@@ -1,6 +1,6 @@
 #include "Terminal.h"
-#include "inout.h"
-#include "common.h"
+#include <tools/inout.h>
+#include <tools/common.h>
 
 
 // hardware VGA buffer location

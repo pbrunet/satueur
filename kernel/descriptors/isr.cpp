@@ -3,9 +3,9 @@
 // and JamesM's kernel development tutorials.
 //
 
-#include "common.h"
+#include <console/Terminal.h>
+
 #include "isr.h"
-#include "Terminal.h"
 
 // This gets called from our ASM interrupt handler stub.
 void isr_handler(registers_t* regs)

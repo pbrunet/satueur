@@ -21,5 +21,8 @@
 *.app
 *.bin
 
+# Dir
+build
+
 # Generated files
 *.pdf
