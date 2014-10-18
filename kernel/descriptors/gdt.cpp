@@ -1,5 +1,5 @@
-#include "gdt.h"
-#include <console/Terminal.h>
+#include <descriptors/gdt.h>
+#include <console/Console.hpp>
 
 GDT::GDT()
 {
@@ -17,7 +17,7 @@ GDT::GDT()
               GR_BASE | OP32 | GRKB); // User mode data segment
 
     gdt_flush((uint32_t)&m_ptr);
-    Terminal::write("GDT Initialised\n");
+    Console::write("GDT Initialised\n");
 }
 
 void GDT::add_entry(size_t id, uint32_t base, uint32_t limit, uint8_t access,
@@ -25,7 +25,7 @@ void GDT::add_entry(size_t id, uint32_t base, uint32_t limit, uint8_t access,
 {
     if(limit>GDT::MAX_LIMIT)
     {
-        Terminal::write("Max limit for GDT reached...\n");
+        Console::write("Max limit for GDT reached...\n");
         return;
     }
 

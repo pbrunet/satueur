@@ -3,14 +3,14 @@
 // and JamesM's kernel development tutorials.
 //
 
-#include <console/Terminal.h>
+#include <console/Console.hpp>
 
-#include "isr.h"
+#include <descriptors/isr.h>
 
 // This gets called from our ASM interrupt handler stub.
 void isr_handler(registers_t* regs)
 {
-    Terminal::write("recieved interrupt: ");
-    Terminal::write((char)('0' + regs->int_no));
-    Terminal::write("\n");
+    Console::write("recieved interrupt: ");
+    Console::write((char)('0' + regs->int_no));
+    Console::write("\n");
 }

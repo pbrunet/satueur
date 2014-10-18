@@ -3,11 +3,10 @@
 // and JamesM's kernel development tutorials.
 //
 
-#include <console/Terminal.h>
+#include <console/Console.hpp>
 #include <tools/inout.h>
-
-#include "idt.h"
-#include "irq.h"
+#include <descriptors/idt.h>
+#include <descriptors/irq.h>
 
 // This gets called from our ASM interrupt handler stub.
 void irq_handler(registers_t* regs)
@@ -27,7 +26,7 @@ void irq_handler(registers_t* regs)
   //        isr_t handler = interrupt_handlers[regs.int_no];
   //        handler(regs);
   //    }
-  Terminal::write("recieved IRQ: ");
-  Terminal::write((char)('0' + regs->int_no - 0x20));
-  Terminal::write("\n");
+  Console::write("recieved IRQ: ");
+  Console::write((char)('0' + regs->int_no - 0x20));
+  Console::write("\n");
 }

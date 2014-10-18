@@ -1,4 +1,4 @@
-#include "Terminal.h"
+#include <console/Console.hpp>
 #include <tools/inout.h>
 #include <tools/common.h>
 
@@ -17,16 +17,16 @@ enum BYTE_POS: uint8_t {
 };
 
 
-Terminal* Terminal::m_instance = nullptr;
+Console* Console::m_instance = nullptr;
 
 
-uint8_t Terminal::make_color(enum vga_color fg, enum vga_color bg)
+uint8_t Console::make_color(enum vga_color fg, enum vga_color bg)
 {
     return fg | bg << 4;
 }
 
 
-uint16_t Terminal::make_vgaentry(char c)
+uint16_t Console::make_vgaentry(char c)
 {
     uint16_t c16 = c;
     uint16_t color16 = color;
@@ -34,7 +34,7 @@ uint16_t Terminal::make_vgaentry(char c)
 }
 
 
-Terminal::Terminal():
+Console::Console():
     row(0),
     column(0),
     color(make_color(COLOR_LIGHT_GREY, COLOR_BLACK)),
@@ -45,7 +45,7 @@ Terminal::Terminal():
 }
 
 
-void Terminal::clear()
+void Console::clear()
 {
     for(size_t y = 0; y < VGA_HEIGHT; y++)
     {
@@ -57,14 +57,14 @@ void Terminal::clear()
 }
 
 
-void Terminal::putentryat(char c, size_t x, size_t y)
+void Console::putentryat(char c, size_t x, size_t y)
 {
     const size_t index = y * VGA_WIDTH + x;
     buffer[index] = make_vgaentry(c);
 }
 
 
-void Terminal::scrollup()
+void Console::scrollup()
 {
     memmove(buffer, buffer + VGA_WIDTH, (VGA_HEIGHT - 1) * VGA_WIDTH);
     for(size_t x = 1; x <= VGA_WIDTH; x++)
@@ -75,7 +75,7 @@ void Terminal::scrollup()
 }
 
 
-void Terminal::print(char c)
+void Console::print(char c)
 {
     if(c == '\n')
     {
@@ -113,7 +113,7 @@ void Terminal::print(char c)
 }
 
 
-void Terminal::write(const char* data)
+void Console::write(const char* data)
 {
     size_t i = 0;
     while(data[i] != 0)
@@ -122,13 +122,13 @@ void Terminal::write(const char* data)
 }
 
 
-void Terminal::write(char c)
+void Console::write(char c)
 {
     m_instance->print(c);
     m_instance->update_cursor();
 }
 
-void Terminal::update_cursor()
+void Console::update_cursor()
 {
     unsigned short position=(row * VGA_WIDTH) + column;
 
@@ -140,12 +140,12 @@ void Terminal::update_cursor()
     outb((unsigned char)((position>>8) & 0xFF), VGA_PORT::CURSOR_POS);
 }
 
-Terminal* Terminal::get()
+Console* Console::get()
 {
     return m_instance;
 }
 
-void Terminal::finalize()
+void Console::finalize()
 {
     m_instance = nullptr;
 }

@@ -31,27 +31,27 @@ enum vga_color
 };
 
 
-class Terminal
+class Console
 {
     public:
-        /*Terminal
+        /*Console
          *--------
          *
          * Initialize terminal setting cursor at upper right corner and setting
          * the default color. Fill the VGA buffer with space as it could be
          * uninitialized.
          *
-         * Terminal save current buffer to enable use of it from everywhere.
+         * Console save current buffer to enable use of it from everywhere.
          * It can't be done with singleton as new allocator doesn't exist for
          * now.
          */
-        Terminal();
+        Console();
 
         /*get
          *----
-         * Get the current Terminal instance if exists or create it
+         * Get the current Console instance if exists or create it
          */
-        static Terminal* get();
+        static Console* get();
 
         /*write
          *-----
@@ -69,7 +69,7 @@ class Terminal
 
         /*finalize
          *--------
-         *Remove the current Terminal.
+         *Remove the current Console.
          */
         static void finalize();
 
@@ -138,7 +138,7 @@ class Terminal
 
         ///Attributs
 
-        static Terminal* m_instance;
+        static Console* m_instance;
         // Current row location
         size_t row;
         // Current column location
