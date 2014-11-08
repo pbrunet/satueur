@@ -18,6 +18,10 @@
 #error "This kernel needs to be compiled with a ix86-elf compiler"
 #endif
 
+#if defined STR_AUTOTEST && (STR_AUTOTEST+0) == 1
+#include <autotests/AutoTests.hpp>
+#endif
+
 #include <console/Console.hpp>
 #include <tools/inout.h>
 #include <descriptors/GDT.hpp>
@@ -29,18 +33,22 @@
 extern "C"
 void kernel_main(struct multiboot */*mboot_ptr*/)
 {
-	asm volatile ("cli");
+	// console
 	Console terminal;
 	Console::write("Starting kernel\n");
+
+	// descriptors tables
 	volatile GDT mygdt;
 	IDT myidt;
-	asm volatile ("int $0x3");
-	asm volatile ("int $0x4");
-	myidt.set_timer(4);
+
 	Console::write("Kernel initialized\n");
 
-	// We will use interruption. make sur they are not blocked.
-	//asm volatile ("sti");
+#if defined STR_AUTOTEST && (STR_AUTOTEST+0) == 1
+	AutoTests at;
+	at.init_isr_tests();
+#endif
+
+	//myidt.set_timer(4);
 
 	while(true);
 }

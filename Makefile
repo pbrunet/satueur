@@ -15,7 +15,7 @@ AS=$(TARGET)-as
 CXX=$(TARGET)-g++
 CC=$(TARGET)-gcc
 
-CXXFLAGS= -std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
+CXXFLAGS= -std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -DSTR_AUTOTEST=$(STR_AUTOTEST)
 CFLAGS= -std=c11 -ffreestanding -O2 -Wall -Wextra
 CPPFLAGS=
 LDFLAGS= -lgcc
@@ -31,6 +31,7 @@ include scripts/utils.mk
 
 # kernel core
 include kernel/Makefile
+include lib/Makefile
 
 #-------------------------------------------------------------------------------
 # compile rules

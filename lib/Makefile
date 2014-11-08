@@ -7,7 +7,7 @@
 #-------------------------------------------------------------------------------
 # flags, ...
 #-------------------------------------------------------------------------------
-CPPFLAGS += -I kernel
+CPPFLAGS += -I lib/libc
 
 #-------------------------------------------------------------------------------
 # features activated
@@ -15,16 +15,10 @@ CPPFLAGS += -I kernel
 features =
 
 # mandatory features
-features += tools
-features += boot
-features += console
-features += descriptors
+features += libc
 
 # optional features
-# feature += pit
-ifdef STR_AUTOTEST
-features += autotests
-endif
+# feature += opt
 
 #-------------------------------------------------------------------------------
 # corresponding inclusion

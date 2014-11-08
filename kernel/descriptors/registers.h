@@ -1,6 +1,8 @@
 #ifndef REGISTERS_H
 #define REGISTERS_H
 
+#include <stdint.h>
+
 struct registers
 {
     uint16_t ds, es, fs, gs;           // Data segment selector
