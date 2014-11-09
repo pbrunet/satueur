@@ -75,6 +75,12 @@ export PATH=$PATH:$HOME/opt/cross/bin
 make
 ----
 
+Note that a compile rule is used to run kernel in a test mode:
+
+----
+STR_AUTOTEST=1 make
+----
+
 Emulator
 --------
 
