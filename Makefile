@@ -7,7 +7,9 @@
 #-------------------------------------------------------------------------------
 # target, cross-compiler, flags, ...
 #-------------------------------------------------------------------------------
-OS_BIN=satueur.bin
+OS_NAME=satueur
+OS_BIN=$(OS_NAME).bin
+OS_ISO=$(OS_NAME).iso
 
 TARGET=i686-elf
 
@@ -50,6 +52,25 @@ $(OS_BIN): $(objects)
 %.o: %.cpp
 	$(CXX) -c $^ -o $@ $(CPPFLAGS) $(CXXFLAGS)
 
-clean:
+#-------------------------------------------------------------------------------
+# iso
+#-------------------------------------------------------------------------------
+iso: all
+	mkdir -p isodir isodir/boot isodir/boot/grub
+	cp $(OS_BIN) isodir/boot/$(OS_BIN)
+	touch isodir/boot/grub/grub.cfg
+	@echo "menuentry \"satueur\" {\n		multiboot /boot/satueur.bin\n}" > \
+		isodir/boot/grub/grub.cfg
+	grub-mkrescue -o $(OS_ISO) isodir
+	rm -rf isodir
+
+#-------------------------------------------------------------------------------
+# clean rules
+#-------------------------------------------------------------------------------
+clean-iso:
+	rm -rf isodir
+	rm -f satueur.iso
+
+clean: clean-iso
 	find . -name *.o | xargs rm -f
 	rm -f $(OS_BIN)

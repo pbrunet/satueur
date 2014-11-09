@@ -81,13 +81,28 @@ Note that a compile rule is used to run kernel in a test mode:
 STR_AUTOTEST=1 make
 ----
 
+Satueur iso
+-----------
+
+To build an iso from the kernel (with grub as bootloader), run:
+
+----
+make iso
+----
+
 Emulator
 --------
 
-After the _satueur_ compilation step, run :
+After the _satueur_ compilation step, you can run the kernel:
 
 ----
 qemu-system-x86_64 -kernel satueur.bin
+----
+
+Or even run the iso:
+
+----
+qemu-system-x86_64 -cdrom satueur.iso
 ----
 
 GAS Syntax
