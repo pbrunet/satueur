@@ -6,7 +6,7 @@
 #ifndef IRQ_H
 #define IRQ_H
 
-#include <tools/common.h>
+#include <string.h>
 #include <descriptors/registers.h>
 
 extern "C" void irq_handler(registers_t*);

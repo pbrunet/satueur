@@ -11,7 +11,7 @@
 #include <descriptors/IDT.hpp>
 #include <console/Console.hpp>
 
-#include <stdlib.h>
+#include <stdlib.hpp>
 
 //==============================================================================
 // 

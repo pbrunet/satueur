@@ -7,6 +7,7 @@
 //------------------------------------------------------------------------------
 #include <autotests/AutoTests.hpp>
 #include <autotests/isr_test_callback.hpp>
+#include <descriptors/isr.hpp>
 #include <console/Console.hpp>
 
 //==============================================================================
@@ -40,6 +41,8 @@ void AutoTests::init_isr_tests()
 //------------------------------------------------------------------------------
 void AutoTests::test_divide_by_zero()
 {
+	IDT::set_isr_callback(0, isr_divide_by_zero_except_callback);
+	Console::write("Test division by zero. Should be aborted:\n");
 	Console::write('a'/0);
 }
 

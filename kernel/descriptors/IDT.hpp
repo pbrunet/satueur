@@ -10,7 +10,7 @@
 //------------------------------------------------------------------------------
 #include <stddef.h>
 #include <stdint.h>
-#include <tools/common.h>
+#include <string.h>
 #include <descriptors/registers.h>
 
 //------------------------------------------------------------------------------

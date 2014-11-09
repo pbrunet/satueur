@@ -6,8 +6,8 @@
 // includes
 //------------------------------------------------------------------------------
 #include <console/Console.hpp>
+#include <string.h>
 #include <tools/inout.h>
-#include <tools/common.h>
 
 //------------------------------------------------------------------------------
 // constants and enums

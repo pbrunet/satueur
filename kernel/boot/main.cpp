@@ -46,6 +46,7 @@ void kernel_main(struct multiboot */*mboot_ptr*/)
 #if defined STR_AUTOTEST && (STR_AUTOTEST+0) == 1
 	AutoTests at;
 	at.init_isr_tests();
+	at.test_divide_by_zero();
 #endif
 
 	//myidt.set_timer(4);

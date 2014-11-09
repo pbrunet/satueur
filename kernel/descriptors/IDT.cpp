@@ -7,11 +7,10 @@
 //------------------------------------------------------------------------------
 #include <descriptors/IDT.hpp>
 #include <descriptors/isr.hpp>
-#include <tools/common.h>
 #include <tools/inout.h>
 #include <console/Console.hpp>
 
-#include <stdlib.h>
+#include <stdlib.hpp>
 
 //------------------------------------------------------------------------------
 // macros
