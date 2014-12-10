@@ -1,42 +1,85 @@
-TOP_SRC_DIR=.
+#===============================================================================
+#
+# main Makefile for satueur kernel
+#
+#===============================================================================
+
+#-------------------------------------------------------------------------------
+# target, cross-compiler, flags, ...
+#-------------------------------------------------------------------------------
+OS_NAME=satueur
+OS_BIN=$(OS_NAME).bin
+OS_ISO=$(OS_NAME).iso
 
 TARGET=i686-elf
-OS_BIN=myos.bin
 
 AS=$(TARGET)-as
 CXX=$(TARGET)-g++
 CC=$(TARGET)-gcc
 
-CXXFLAGS= -std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
+CXXFLAGS= -std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -DSTR_AUTOTEST=$(STR_AUTOTEST)
 CFLAGS= -std=c11 -ffreestanding -O2 -Wall -Wextra
-CPPFLAGS= -I$(TOP_SRC_DIR)/include
+CPPFLAGS= -I kernel -I lib/libc/include
 LDFLAGS= -lgcc
 
-CPP_FILES=$(wildcard src/*.cpp)
-OBJS=$(subst src/,obj/,$(subst .cpp,.o,$(CPP_FILES)))
+objects=
+linker=
 
-AS_FILES=$(wildcard src/*.s)
-OBJS+=$(subst src/,obj/,$(subst .s,.o,$(AS_FILES)))
+#-------------------------------------------------------------------------------
+# includes
+#-------------------------------------------------------------------------------
+# tools
+include scripts/utils.mk
 
-C_FILES=$(wildcard src/*.c)
-OBJS+=$(subst src/,obj/,$(subst .c,.o,$(C_FILES)))
+# kernel core
+include kernel/Makefile
+include lib/Makefile
 
+#-------------------------------------------------------------------------------
+# compile rules
+#-------------------------------------------------------------------------------
 all: $(OS_BIN)
 
-$(OS_BIN): $(OBJS) linker/linker.ld
-	$(CXX) -T linker/linker.ld -o $(OS_BIN) -ffreestanding -O2 -nostdlib $(OBJS) $(LDFLAGS)
-
-obj/%.o: src/%.s
+$(OS_BIN): $(objects)
+	$(CXX) -T $(linker) -o $(OS_BIN) -ffreestanding -O2 \
+		-nostdlib $(objects) $(LDFLAGS)
+%.o: %.s
 	$(AS) $^ -o $@
 
-obj/%.o: src/%.cpp
-	$(CXX) -c $^ -o $@ $(CPPFLAGS) $(CXXFLAGS)
-
-obj/%.o: src/%.c
+%.o: %.c
 	$(CC) -c $^ -o $@ $(CPPFLAGS) $(CFLAGS)
 
-clean:
-	rm -f obj/* || true
-	rm $(OS_BIN)
+%.o: %.cpp
+	$(CXX) -c $^ -o $@ $(CPPFLAGS) $(CXXFLAGS)
 
-.PHONY: clean
+#-------------------------------------------------------------------------------
+# doc
+#-------------------------------------------------------------------------------
+doc:
+	a2x README
+
+#-------------------------------------------------------------------------------
+# iso
+#-------------------------------------------------------------------------------
+iso: all
+	mkdir -p isodir isodir/boot isodir/boot/grub
+	cp $(OS_BIN) isodir/boot/$(OS_BIN)
+	touch isodir/boot/grub/grub.cfg
+	@echo "menuentry \"satueur\" {\n		multiboot /boot/satueur.bin\n}" > \
+		isodir/boot/grub/grub.cfg
+	grub-mkrescue -o $(OS_ISO) isodir
+	rm -rf isodir
+
+#-------------------------------------------------------------------------------
+# clean rules
+#-------------------------------------------------------------------------------
+clean-doc:
+	rm -f README.pdf
+
+clean-iso:
+	rm -rf isodir
+	rm -f satueur.iso
+
+clean: clean-iso clean-doc
+	find . -name *.o | xargs rm -f
+	rm -f $(OS_BIN)

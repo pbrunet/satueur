@@ -20,3 +20,10 @@
 *.out
 *.app
 *.bin
+*.iso
+
+# Dir
+build
+
+# Generated files
+*.pdf
