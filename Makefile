@@ -17,7 +17,8 @@ AS=$(TARGET)-as
 CXX=$(TARGET)-g++
 CC=$(TARGET)-gcc
 
-CXXFLAGS= -std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -DSTR_AUTOTEST=$(STR_AUTOTEST)
+CXXFLAGS= 	-std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions \
+			-fno-rtti -DSTR_AUTOTEST=$(STR_AUTOTEST)
 CFLAGS= -std=c11 -ffreestanding -O2 -Wall -Wextra
 CPPFLAGS= -I kernel -I lib/libc/include
 LDFLAGS= -lgcc

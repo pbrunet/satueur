@@ -15,6 +15,6 @@
 __attribute__((__noreturn__))
 void abort(void)
 {
-	Console::write("Aborted...\n");
-	while ( 1 ) { }
+    Console::write("Aborted...\n");
+    while ( 1 ) { }
 }

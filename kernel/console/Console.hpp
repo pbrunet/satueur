@@ -41,120 +41,119 @@ enum vga_color
 class Console
 {
 public:
-	/*Console
-	 *--------
-	 *
-	 * Initialize terminal setting cursor at upper right corner and setting
-	 * the default color. Fill the VGA buffer with space as it could be
-	 * uninitialized.
-	 *
-	 * Console save current buffer to enable use of it from everywhere.
-	 * It can't be done with singleton as new allocator doesn't exist for
-	 * now.
-	 */
-	Console();
+    /*Console
+     *--------
+     *
+     * Initialize terminal setting cursor at upper right corner and setting
+     * the default color. Fill the VGA buffer with space as it could be
+     * uninitialized.
+     *
+     * Console save current buffer to enable use of it from everywhere.
+     * It can't be done with singleton as new allocator doesn't exist for
+     * now.
+     */
+    Console();
 
-	/*get
-	 *----
-	 * Get the current Console instance if exists or create it
-	 */
-	static Console* get();
+    /*get
+     *----
+     * Get the current Console instance if exists or create it
+     */
+    static Console* get();
 
-	/*write
-	 *-----
-	 *
-	 * Write the given string in the terminal.
-	 */
-	static void write(const char* data);
+    /*write
+     *-----
+     *
+     * Write the given string in the terminal.
+     */
+    static void write(const char* data);
 
-	/*write
-	 *-----
-	 *
-	 * Write a char in the terminal and update location and view accordingly
-	 */
-	static void write(char c);
+    /*write
+     *-----
+     *
+     * Write a char in the terminal and update location and view accordingly
+     */
+    static void write(char c);
 
-	/*finalize
-	 *--------
-	 *Remove the current Console.
-	 */
-	static void finalize();
+    /*finalize
+     *--------
+     *Remove the current Console.
+     */
+    static void finalize();
 
 private:
-	///Methods
+    //Methods
 
-	/* make_color
-	 * ----------
-	 *
-	 * Create a 8 bytes color for vga input.
-	 *
-	 * Merge foreground and background color in a single 8 bytes variables.
-	 *
-	 * bytes :  1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
-	 * values: bg |bg |bg |bg |fg |fg |fg |fg
-	 */
-	uint8_t make_color(enum vga_color fg, enum vga_color bg);
+    /* make_color
+     * ----------
+     *
+     * Create a 8 bytes color for vga input.
+     *
+     * Merge foreground and background color in a single 8 bytes variables.
+     *
+     * bytes :  1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+     * values: bg |bg |bg |bg |fg |fg |fg |fg
+     */
+    uint8_t make_color(enum vga_color fg, enum vga_color bg);
 
-	/* make_vgaentry
-	 * -------------
-	 *
-	 * Create a 16 bytes word for vga test input.
-	 *
-	 * Merge color and text in a single 16 bytes variables.
-	 *
-	 * bytes : 1 ... 8 | 9 ... 16
-	 * values: colors  | texts
-	 *
-	 */
-	uint16_t make_vgaentry(char c);
+    /* make_vgaentry
+     * -------------
+     *
+     * Create a 16 bytes word for vga test input.
+     *
+     * Merge color and text in a single 16 bytes variables.
+     *
+     * bytes : 1 ... 8 | 9 ... 16
+     * values: colors  | texts
+     *
+     */
+    uint16_t make_vgaentry(char c);
 
-	/*putentryat
-	 *----------
-	 *
-	 * Write a char in the terminal.
-	 */
-	void putentryat(char c, size_t x, size_t y);
+    /*putentryat
+     *----------
+     *
+     * Write a char in the terminal.
+     */
+    void putentryat(char c, size_t x, size_t y);
 
-	/*scrollup
-	 *--------
-	 *
-	 * Scroll text up for one line in the terminal.
-	 */
-	void scrollup();
+    /*scrollup
+     *--------
+     *
+     * Scroll text up for one line in the terminal.
+     */
+    void scrollup();
 
-	/*print
-	 *-----
-	 *
-	 * print a character in the terminal and update location
-	 */
-	void print(char c);
+    /*print
+     *-----
+     *
+     * print a character in the terminal and update location
+     */
+    void print(char c);
 
-	/*update_cursor
-	 *-------------
-	 *
-	 * update the cursor location according to current location
-	 */
-	void update_cursor();
+    /*update_cursor
+     *-------------
+     *
+     * update the cursor location according to current location
+     */
+    void update_cursor();
 
-	/*clear
-	 *-----
-	 *
-	 * Set all character to empty space in the buffer
-	 */
-	void clear();
+    /*clear
+     *-----
+     *
+     * Set all character to empty space in the buffer
+     */
+    void clear();
 
-	///Attributs
+    ///Attributs
 
-	static Console* m_instance;
-	// Current row location
-	size_t row;
-	// Current column location
-	size_t column;
-	// Current color
-	uint8_t color;
-	// VGA buffer to write text
-	uint16_t* buffer;
-
+    static Console* m_instance;
+    // Current row location
+    size_t row;
+    // Current column location
+    size_t column;
+    // Current color
+    uint8_t color;
+    // VGA buffer to write text
+    uint16_t* buffer;
 };
 
 #endif
