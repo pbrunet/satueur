@@ -1,7 +1,3 @@
-/*
- * @file AutoTests.hpp
- */
-
 #ifndef AUTOTESTS_HPP
 #define AUTOTESTS_HPP
 

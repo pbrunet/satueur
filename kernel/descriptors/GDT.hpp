@@ -1,7 +1,3 @@
-/*
- * @file GDT.hpp
- */
-
 // GDT = Global descriptor table
 
 #ifndef GDT_HPP

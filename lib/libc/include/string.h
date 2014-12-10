@@ -1,9 +1,3 @@
-/* 
- * @file string.h
- * @author tergeist
- * @date 2014/11/08 17:28:17
- */
-
 #ifndef STRING_H
 #define STRING_H
  

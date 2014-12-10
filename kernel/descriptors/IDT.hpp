@@ -1,7 +1,3 @@
-/*
- * @file IDT.hpp
- */
-
 #ifndef IDT_HPP
 #define IDT_HPP
 
