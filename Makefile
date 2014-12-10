@@ -17,14 +17,19 @@ AS=$(TARGET)-as
 CXX=$(TARGET)-g++
 CC=$(TARGET)-gcc
 
-CXXFLAGS= 	-std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions \
-			-fno-rtti -DSTR_AUTOTEST=$(STR_AUTOTEST)
+CXXFLAGS= -std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
 CFLAGS= -std=c11 -ffreestanding -O2 -Wall -Wextra
 CPPFLAGS= -I kernel -I lib/libc/include
 LDFLAGS= -lgcc
 
+ifdef STR_AUTOTEST
+CXXFLAGS += -DSTR_AUTOTEST
+endif
+
 objects=
 linker=
+
+TMPDIR:=$(shell mktemp -d /tmp/$(OS_NAME).XXXXX)
 
 #-------------------------------------------------------------------------------
 # includes
@@ -63,13 +68,13 @@ doc:
 # iso
 #-------------------------------------------------------------------------------
 iso: all
-	mkdir -p isodir isodir/boot isodir/boot/grub
-	cp $(OS_BIN) isodir/boot/$(OS_BIN)
-	touch isodir/boot/grub/grub.cfg
+	@mkdir -p $(TMPDIR)/boot/grub 
+	@cp $(OS_BIN) $(TMPDIR)/boot/$(OS_BIN)
+	@touch $(TMPDIR)/boot/grub/grub.cfg
 	@echo "menuentry \"satueur\" {\n		multiboot /boot/satueur.bin\n}" > \
-		isodir/boot/grub/grub.cfg
-	grub-mkrescue -o $(OS_ISO) isodir
-	rm -rf isodir
+		$(TMPDIR)/boot/grub/grub.cfg
+	@grub-mkrescue -o $(OS_ISO) $(TMPDIR)
+	@rm -rf $(TMPDIR)
 
 #-------------------------------------------------------------------------------
 # clean rules

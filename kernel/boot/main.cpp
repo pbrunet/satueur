@@ -14,7 +14,7 @@
 #error "This kernel needs to be compiled with a ix86-elf compiler"
 #endif
 
-#if defined STR_AUTOTEST && (STR_AUTOTEST+0) == 1
+#ifdef STR_AUTOTEST
 #include <autotests/AutoTests.hpp>
 #endif
 
@@ -39,7 +39,7 @@ void kernel_main(struct multiboot */*mboot_ptr*/)
 
     Console::write("Kernel initialized\n");
 
-#if defined STR_AUTOTEST && (STR_AUTOTEST+0) == 1
+#ifdef STR_AUTOTEST
     AutoTests at;
     at.init_isr_tests();
     at.test_divide_by_zero();
