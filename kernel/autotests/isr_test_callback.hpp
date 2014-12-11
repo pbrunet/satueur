@@ -1,7 +1,3 @@
-/*
- * @file isr_test_callback.h
- */
-
 #ifndef ISR_TEST_CALLBACK_H
 #define ISR_TEST_CALLBACK_H
 

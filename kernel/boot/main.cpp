@@ -1,7 +1,3 @@
-/*
- * @file main.cpp
- */
-
 //------------------------------------------------------------------------------
 // includes
 //------------------------------------------------------------------------------
@@ -18,7 +14,7 @@
 #error "This kernel needs to be compiled with a ix86-elf compiler"
 #endif
 
-#if defined STR_AUTOTEST && (STR_AUTOTEST+0) == 1
+#ifdef STR_AUTOTEST
 #include <autotests/AutoTests.hpp>
 #endif
 
@@ -33,23 +29,23 @@
 extern "C"
 void kernel_main(struct multiboot */*mboot_ptr*/)
 {
-	// console
-	Console terminal;
-	Console::write("Starting kernel\n");
+    // console
+    Console terminal;
+    Console::write("Starting kernel\n");
 
-	// descriptors tables
-	volatile GDT mygdt;
-	IDT myidt;
+    // descriptors tables
+    volatile GDT mygdt;
+    IDT myidt;
 
-	Console::write("Kernel initialized\n");
+    Console::write("Kernel initialized\n");
 
-#if defined STR_AUTOTEST && (STR_AUTOTEST+0) == 1
-	AutoTests at;
-	at.init_isr_tests();
-	at.test_divide_by_zero();
+#ifdef STR_AUTOTEST
+    AutoTests at;
+    at.init_isr_tests();
+    at.test_divide_by_zero();
 #endif
 
-	//myidt.set_timer(4);
+    //myidt.set_timer(4);
 
-	while(true);
+    while(true);
 }

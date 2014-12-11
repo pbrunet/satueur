@@ -1,9 +1,3 @@
-/* 
- * @file memmove.c
- * @author tergeist
- * @date 2014/11/08 17:31:34
- */
-
 #include <string.h>
 #include <stdint.h>
 

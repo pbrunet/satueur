@@ -1,9 +1,3 @@
-/* 
- * @file stdlib.h
- * @author tergeist
- * @date 2014/11/01 17:55:10
- */
-
 #ifndef STDLIB_H
 #define STDLIB_H
  

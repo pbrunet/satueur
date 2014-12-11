@@ -1,9 +1,3 @@
-/* 
- * @file memcpy.c
- * @author tergeist
- * @date 2014/11/08 17:34:48
- */
-
 #include <string.h>
 #include <stdint.h>
 

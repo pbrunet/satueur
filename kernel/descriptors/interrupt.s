@@ -11,7 +11,6 @@ irq\num:
 .global isr\num
 .type isr\num, @function
 isr\num:
-	cli
     push $0
     push $\num
     jmp isr_common_stub
@@ -21,7 +20,6 @@ isr\num:
 .global isr\num
 .type isr\num, @function
 isr\num:
-	cli
     push $\num
     jmp isr_common_stub
 .endm
