@@ -3,8 +3,14 @@
 // and JamesM's kernel development tutorials.
 //
 
-#include <console/Console.hpp>
-#include <tools/inout.h>
+//------------------------------------------------------------------------------
+// includes
+//------------------------------------------------------------------------------
+// libc includes
+#include <sys/io.h>
+#include <stdio.h>
+
+// kernel include
 #include <descriptors/IDT.hpp>
 #include <descriptors/irq.h>
 
@@ -26,7 +32,6 @@ void irq_handler(registers_t* regs)
     //        isr_t handler = interrupt_handlers[regs.int_no];
     //        handler(regs);
     //    }
-    Console::write("recieved IRQ: ");
-    Console::write((char)('0' + regs->int_no - 0x20));
-    Console::write("\n");
+
+    printf("recieved IRQ: %d\n", regs->int_no);
 }

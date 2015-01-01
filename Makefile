@@ -9,6 +9,7 @@
 #-------------------------------------------------------------------------------
 OS_NAME=satueur
 OS_BIN=$(OS_NAME).bin
+OS_DBG_BIN=$(OS_NAME)_dbg.bin
 OS_ISO=$(OS_NAME).iso
 
 TARGET=i686-elf
@@ -22,8 +23,8 @@ CFLAGS= -std=c11 -ffreestanding -O2 -Wall -Wextra
 CPPFLAGS= -I kernel -I lib/libc/include
 LDFLAGS= -lgcc
 
-ifdef STR_AUTOTEST
-CXXFLAGS += -DSTR_AUTOTEST
+ifdef STR_DEBUG
+CPPFLAGS += -DSTR_DEBUG
 endif
 
 objects=
@@ -67,12 +68,19 @@ doc:
 #-------------------------------------------------------------------------------
 # iso
 #-------------------------------------------------------------------------------
-iso: all
+iso: 
 	@mkdir -p $(TMPDIR)/boot/grub 
+	$(MAKE) clean
+	$(MAKE)
 	@cp $(OS_BIN) $(TMPDIR)/boot/$(OS_BIN)
+	$(MAKE) clean
+	STR_DEBUG=1 $(MAKE)
+	@cp $(OS_BIN) $(TMPDIR)/boot/$(OS_DBG_BIN)
 	@touch $(TMPDIR)/boot/grub/grub.cfg
-	@echo "menuentry \"satueur\" {\n		multiboot /boot/satueur.bin\n}" > \
+	@echo "menuentry \"satueur\" {\n\tmultiboot /boot/satueur.bin\n}" > \
 		$(TMPDIR)/boot/grub/grub.cfg
+	@echo "menuentry \"satueur-dbg\" {\n\tmultiboot /boot/satueur_dbg.bin\n}" \
+		>> $(TMPDIR)/boot/grub/grub.cfg
 	@grub-mkrescue -o $(OS_ISO) $(TMPDIR)
 	@rm -rf $(TMPDIR)
 

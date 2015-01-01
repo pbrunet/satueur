@@ -1,7 +1,12 @@
 //------------------------------------------------------------------------------
 // includes
 //------------------------------------------------------------------------------
-#include <console/Console.hpp>
+// libc includes
+#include <stdlib.h>
+#include <string.h>
+
+// kernel includes
+#include <logger/Logger.hpp>
 #include <autotests/isr_test_callback.hpp>
 
 //------------------------------------------------------------------------------
@@ -9,20 +14,28 @@
 //------------------------------------------------------------------------------
 void check_isr_validity(int32_t isr_waited, int32_t isr_received)
 {
+    // convert isr number to to char
+    char isr_waited_str[3];
+    itoa(isr_waited, isr_waited_str, 10);
+
+    char isr_received_str[3];
+    itoa(isr_received, isr_received_str, 10);
+
+    // print test result
+    char result[30] = "isr ";
+
     if ( isr_waited == isr_received )
     {
-        Console::write("[OK] isr ");
-        Console::write('0'+isr_waited);
-        Console::write("\n");
+        strcat(result, isr_waited_str);
+        Logger::log(result, LOGGER_LOGLEVEL::OK);
     }
     else
     {
-        Console::write("[FAIL] isr ");
-        Console::write('0'+isr_waited);
-        Console::write(" (");
-        Console::write('0'+isr_received);
-        Console::write(" received)");
-        Console::write("\n");
+        strcat(result, isr_waited_str);
+        strcat(result, " (");
+        strcat(result, isr_received_str);
+        strcat(result, " received)");
+        Logger::log(result, LOGGER_LOGLEVEL::FAIL);
     }
 }
 

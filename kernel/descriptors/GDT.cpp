@@ -1,8 +1,11 @@
 //------------------------------------------------------------------------------
 // includes
 //------------------------------------------------------------------------------
+// libc includes
+#include <stdio.h>
+
+// local includes
 #include <descriptors/GDT.hpp>
-#include <console/Console.hpp>
 
 //==============================================================================
 // 
@@ -28,7 +31,6 @@ GDT::GDT()
               GR_BASE | OP32 | GRKB); // User mode data segment
 
     gdt_flush((uint32_t)&m_ptr);
-    Console::write("GDT Initialised\n");
 }
 
 //==============================================================================
@@ -44,7 +46,7 @@ void GDT::add_entry(size_t id, uint32_t base, uint32_t limit, uint8_t access,
 {
     if(limit>GDT::MAX_LIMIT)
     {
-        Console::write("Max limit for GDT reached...\n");
+        printf("Max limit for GDT reached...\n");
         return;
     }
 

@@ -10,14 +10,14 @@
 features =
 
 # mandatory features
-features += tools
 features += boot
 features += console
 features += descriptors
+features += logger
 
 # optional features
 # feature += pit
-ifdef STR_AUTOTEST
+ifdef STR_DEBUG
 features += autotests
 endif
 

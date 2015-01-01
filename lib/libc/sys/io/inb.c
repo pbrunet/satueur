@@ -1,4 +1,4 @@
-#include "inout.h"
+#include <sys/io.h>
 
 unsigned char inb(unsigned short port)
 {
@@ -7,7 +7,3 @@ unsigned char inb(unsigned short port)
     return rega;
 }
 
-void outb(unsigned char value, unsigned short port)
-{
-    __asm__ __volatile__("outb %0, %1" : : "a" (value), "Nd" (port));
-}

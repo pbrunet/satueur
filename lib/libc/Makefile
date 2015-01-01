@@ -12,6 +12,8 @@ features =
 # mandatory features
 features += stdlib 
 features += string
+features += stdio
+features += sys/io
 
 #-------------------------------------------------------------------------------
 # corresponding inclusion
