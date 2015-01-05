@@ -1,10 +1,13 @@
 //------------------------------------------------------------------------------
 // includes
 //------------------------------------------------------------------------------
+// libc includes
+#include <stdio.h>
+
+// kernel includes
 #include <autotests/AutoTests.hpp>
 #include <autotests/isr_test_callback.hpp>
 #include <descriptors/isr.hpp>
-#include <console/Console.hpp>
 
 //==============================================================================
 // 
@@ -16,6 +19,7 @@
 //------------------------------------------------------------------------------
 AutoTests::AutoTests()
 {
+    printf("\nRunning autotests...\n");
 }
 
 //==============================================================================
@@ -38,8 +42,8 @@ void AutoTests::init_isr_tests()
 void AutoTests::test_divide_by_zero()
 {
     IDT::set_isr_callback(0, isr_divide_by_zero_except_callback);
-    Console::write("Test division by zero. Should be aborted:\n");
-    Console::write('a'/0);
+    printf("Test division by zero. Should be aborted:\n");
+    printf("%d", 10/0);
 }
 
 //==============================================================================
@@ -52,9 +56,7 @@ void AutoTests::test_divide_by_zero()
 //------------------------------------------------------------------------------
 void AutoTests::init_isr_tests_callbacks()
 {
-    Console::write("AUTOTESTS\n");
-
-	// doesn't test isr with error code because it has to be aborted
+    // doesn't test isr with error code because it has to be aborted
     IDT::set_isr_callback(0, isr0_test_callback);
     IDT::set_isr_callback(1, isr1_test_callback);
     IDT::set_isr_callback(2, isr2_test_callback);
@@ -76,7 +78,7 @@ void AutoTests::init_isr_tests_callbacks()
 //------------------------------------------------------------------------------
 void AutoTests::init_isr_tests_asm_int()
 {
-    asm volatile ("int $0x00"); // ISR 1
+    asm volatile ("int $0x00"); // ISR 0
     asm volatile ("int $0x01"); // ISR 1
     asm volatile ("int $0x02"); // ISR 2
     asm volatile ("int $0x03"); // ISR 3

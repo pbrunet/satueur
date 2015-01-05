@@ -78,7 +78,7 @@ make
 Note that a compile rule is used to run kernel in a test mode:
 
 ----
-STR_AUTOTEST=1 make
+STR_DEBUG=1 make
 ----
 
 Satueur iso
