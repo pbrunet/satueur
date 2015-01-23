@@ -14,6 +14,7 @@ features += boot
 features += console
 features += descriptors
 features += logger
+features += memory
 
 # optional features
 # feature += pit
