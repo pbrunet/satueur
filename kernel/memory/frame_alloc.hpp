@@ -4,12 +4,18 @@
 #include <stddef.h>
 #include <stdint.h>
 
-extern uint32_t current_mem_position; // Store current position of the memory ptr.
-
-namespace FrameAlloc
+class FrameAlloc
 {
-    void* kmalloc(uint32_t size, bool aligned=false, uint32_t* phys=nullptr); // size in byte
-    uint32_t first_frame();
+    public:
+        static void* malloc(uint32_t size, bool page_align=true,
+                uint32_t* phys=nullptr);
+
+        static uint32_t get_pos();
+        static uint32_t first_frame();
+        static void free(void* to_free);
+
+    private:
+        static uint32_t m_current_mem_position;
 };
 
 namespace Bitmap {

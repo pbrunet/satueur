@@ -3,25 +3,26 @@
 
 // It's adresse is the end of the kernel location (so the begin of memory)
 extern uint32_t endkernel;
+
 // Store current position of the memory ptr.
 // It is non-ptr type to be able to perform bitmask on it. (alignment, ...)
-uint32_t current_mem_position = (uint32_t)&endkernel;
-
+uint32_t FrameAlloc::m_current_mem_position = \
+      reinterpret_cast<uint32_t>(&endkernel);
 
 // FIXME we should be able to specify an alignment depending on allocated type.
-void* FrameAlloc::kmalloc(uint32_t size, bool aligned, uint32_t* phys)
+void* FrameAlloc::malloc(uint32_t size, bool page_align, uint32_t* phys)
 {
     // If the address is not already page-aligned
-    if (aligned and (current_mem_position & 0xFFFFF000))
+    if (page_align and (m_current_mem_position & 0xFFFFF000))
     {
         // Align it.
-        current_mem_position &= 0xFFFFF000;
-        current_mem_position += 0x1000;
+        m_current_mem_position &= 0xFFFFF000;
+        m_current_mem_position += 0x1000;
     }
     if(phys)
-        *phys = current_mem_position;
-    void* init_cur = (void*)current_mem_position;
-    current_mem_position += size;
+        *phys = m_current_mem_position;
+    void* init_cur = reinterpret_cast<void*>(m_current_mem_position);
+    m_current_mem_position += size;
     return init_cur;
 }
 
@@ -82,3 +83,12 @@ uint32_t FrameAlloc::first_frame()
    return -1;
 }
 
+uint32_t FrameAlloc::get_pos()
+{
+   return m_current_mem_position;
+}
+
+void free(void*)
+{
+   // This dummy allocator is not able to free memory.
+}

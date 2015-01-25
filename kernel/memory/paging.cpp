@@ -20,18 +20,18 @@ void Paging::initialise_paging()
    uint32_t mem_end_page = 0x1000000;
    nframes = mem_end_page / 0x1000;
    frames = reinterpret_cast<uint32_t*>(
-         FrameAlloc::kmalloc(INDEX_FROM_BIT(nframes), true));
+         FrameAlloc::malloc(INDEX_FROM_BIT(nframes), true));
    memset(frames, 0, INDEX_FROM_BIT(nframes));
 
    // Let's make a page directory.
    page_directory_t* kernel_directory = \
          reinterpret_cast<page_directory_t*>(
-               FrameAlloc::kmalloc(sizeof(page_directory_t), true));
+               FrameAlloc::malloc(sizeof(page_directory_t), true));
 
    // We need to identity map (phys addr = virt addr) from
    // 0x0 to the end of used memory, so we can access this
    // transparently, as if paging wasn't enabled.
-   for(uint32_t i = 0; i < current_mem_position; i += 0x1000)
+   for(uint32_t i = 0; i < FrameAlloc::get_pos(); i += 0x1000)
    {
        // Kernel code is readable but not writeable from userspace.
       Paging::alloc_frame(Paging::get_page(i, 1, kernel_directory), 1, 0);
@@ -66,7 +66,7 @@ page_t *Paging::get_page(uint32_t address, int make, page_directory_t *dir)
    else if(make)
    {
        uint32_t tmp;
-       dir->tables[table_idx] = (page_table_t*)FrameAlloc::kmalloc(sizeof(page_table_t), true, &tmp);
+       dir->tables[table_idx] = (page_table_t*)FrameAlloc::malloc(sizeof(page_table_t), true, &tmp);
        memset(dir->tables[table_idx], 0, 0x1000);
        dir->tablesPhysical[table_idx] = tmp | 0x7; // PRESENT, RW, US.
        return &dir->tables[table_idx]->pages[address%1024];
