@@ -1,7 +1,9 @@
+#include <utils/local_static.hpp>
+
 #include "frame_alloc.hpp"
 
 
-// It's adresse is the end of the kernel location (so the begin of memory)
+// Its adresse is the end of the kernel location (so the begin of memory)
 extern uint32_t endkernel;
 
 // Store current position of the memory ptr.
@@ -19,6 +21,8 @@ void* FrameAlloc::malloc(uint32_t size, bool page_align, uint32_t* phys)
         m_current_mem_position &= 0xFFFFF000;
         m_current_mem_position += 0x1000;
     }
+    // For now it is the same as the returned value but it may differe once
+    // paging is enabled
     if(phys)
         *phys = m_current_mem_position;
     void* init_cur = reinterpret_cast<void*>(m_current_mem_position);
@@ -26,69 +30,43 @@ void* FrameAlloc::malloc(uint32_t size, bool page_align, uint32_t* phys)
     return init_cur;
 }
 
-// A bitset of frames - used or free.
-uint32_t *frames;
-uint32_t nframes;
-
-// Macros used in the bitset algorithms.
-#define INDEX_FROM_BIT(a) (a/(8*4))
-#define OFFSET_FROM_BIT(a) (a%(8*4))
-
-// Static function to set a bit in the frames bitset
-void Bitmap::set_frame(uint32_t frame_addr)
-{
-   uint32_t frame = frame_addr/0x1000;
-   uint32_t idx = INDEX_FROM_BIT(frame);
-   uint32_t off = OFFSET_FROM_BIT(frame);
-   frames[idx] |= (0x1 << off);
-}
-
-// Static function to clear a bit in the frames bitset
-void Bitmap::clear_frame(uint32_t frame_addr)
-{
-   uint32_t frame = frame_addr/0x1000;
-   uint32_t idx = INDEX_FROM_BIT(frame);
-   uint32_t off = OFFSET_FROM_BIT(frame);
-   frames[idx] &= ~(0x1 << off);
-}
-
-// Static function to test if a bit is set.
-uint32_t Bitmap::test_frame(uint32_t frame_addr)
-{
-   uint32_t frame = frame_addr/0x1000;
-   uint32_t idx = INDEX_FROM_BIT(frame);
-   uint32_t off = OFFSET_FROM_BIT(frame);
-   return (frames[idx] & (0x1 << off));
-}
-
 // Static function to find the first free frame.
-uint32_t FrameAlloc::first_frame()
+uint32_t FrameAlloc::first_frame() const
 {
-   uint32_t i, j;
-   for (i = 0; i < INDEX_FROM_BIT(nframes); i++)
-   {
-       if (frames[i] != 0xFFFFFFFF) // nothing free, exit early.
-       {
-           // at least one bit is free here.
-           for (j = 0; j < 32; j++)
-           {
-               uint32_t toTest = 0x1 << j;
-               if ( !(frames[i]&toTest) )
-               {
-                   return i*4*8+j;
-               }
-           }
-       }
-   }
-   return -1;
+    for(uint32_t i=0; i < m_frames.size(); i++)
+    {
+        if(!(m_frames.test(i)))
+           return i;
+    }
+    return -1;
 }
 
-uint32_t FrameAlloc::get_pos()
+FrameAlloc& FrameAlloc::get()
+{
+   // The size of physical memory. For the moment we
+   // assume it is 16MB big.
+   // It will be change later : http://wiki.osdev.org/Detecting_Memory_(x86)
+
+   static FrameAlloc singleton(0x1000);
+   return singleton;
+}
+
+uint32_t FrameAlloc::get_pos() const
 {
    return m_current_mem_position;
 }
 
-void free(void*)
+void FrameAlloc::free(void* p)
 {
-   // This dummy allocator is not able to free memory.
+   clear_frame(reinterpret_cast<uint32_t>(p) / 0x1000);
+}
+
+void FrameAlloc::set_frame(uint32_t i)
+{
+   m_frames.set(i);
+}
+
+void FrameAlloc::clear_frame(uint32_t i)
+{
+   m_frames.set(i, false);
 }

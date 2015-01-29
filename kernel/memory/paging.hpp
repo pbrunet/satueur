@@ -26,46 +26,50 @@ struct page_table_t
 
 struct page_directory_t
 {
-   /**
-      Array of pointers to pagetables.
-   **/
+   /*
+    * Array of pointers to pagetables.
+    */
    page_table_t *tables[1024] __attribute__((aligned(4096)));
-   /**
-      Array of pointers to the pagetables above, but gives their *physical*
-      location, for loading into the CR3 register.
-   **/
+   /*
+    * Array of pointers to the pagetables above, but gives their *physical*
+    * location, for loading into the CR3 register.
+    */
    uint32_t tablesPhysical[1024] __attribute__((aligned(4096)));;
 };
 
 
 namespace Paging
 {
-   /**
-     Sets up the environment, page directories etc and
-     enables paging.
-    **/
+   /*
+    * Sets up the environment, page directories etc and enables paging.
+    */
    void initialise_paging();
 
-   /**
-     Causes the specified page directory to be loaded into the
-     CR3 register.
-    **/
+   /*
+    * Causes the specified page directory to be loaded into the CR3 register.
+    */
    void switch_page_directory(page_directory_t *new_pd);
 
-   /**
-     Retrieves a pointer to the page required.
-     If make == 1, if the page-table in which this page should
-     reside isn't created, create it!
-    **/
+   /*
+    * Retrieves a pointer to the page required.
+    * If make == 1, if the page-table in which this page should
+    * reside isn't created, create it!
+    */
    page_t *get_page(uint32_t address, int make, page_directory_t *dir);
 
-   /**
-     Handler for page faults.
-    **/
+   /*
+    * Handler for page faults.
+    */
    void page_fault(uint32_t isr_num, uint32_t err_code);
 
+   /*
+    * Fill page and mark frame as use.
+    */
    void alloc_frame(page_t *page, int is_kernel, int is_writeable);
 
+   /*
+    * Clean page and mark frame as free.
+    */
    void free_frame(page_t *page);
 }
 #endif

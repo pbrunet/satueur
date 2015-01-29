@@ -1,37 +1,26 @@
 #include <string.h>
 
 #include <descriptors/IDT.hpp>
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "paging.hpp"
 
-extern uint32_t nframes;
-extern uint32_t *frames;
+#include <stdio.h>
+#include <stdlib.h>
+#include <bitmap.hpp>
 
-// Macros used in the bitset algorithms.
-#define INDEX_FROM_BIT(a) (a/(8*4))
-#define OFFSET_FROM_BIT(a) (a%(8*4))
 
 void Paging::initialise_paging()
 {
-   // The size of physical memory. For the moment we
-   // assume it is 16MB big.
-   uint32_t mem_end_page = 0x1000000;
-   nframes = mem_end_page / 0x1000;
-   frames = reinterpret_cast<uint32_t*>(
-         FrameAlloc::malloc(INDEX_FROM_BIT(nframes), true));
-   memset(frames, 0, INDEX_FROM_BIT(nframes));
+   FrameAlloc::get(); // Be sure Frame allocator is created
 
    // Let's make a page directory.
    page_directory_t* kernel_directory = \
          reinterpret_cast<page_directory_t*>(
-               FrameAlloc::malloc(sizeof(page_directory_t), true));
+               FrameAlloc::get().malloc(sizeof(page_directory_t), true));
 
    // We need to identity map (phys addr = virt addr) from
    // 0x0 to the end of used memory, so we can access this
    // transparently, as if paging wasn't enabled.
-   for(uint32_t i = 0; i < FrameAlloc::get_pos(); i += 0x1000)
+   for(uint32_t i = 0; i <= FrameAlloc::get().get_pos(); i += 0x1000)
    {
        // Kernel code is readable but not writeable from userspace.
       Paging::alloc_frame(Paging::get_page(i, 1, kernel_directory), 1, 0);
@@ -66,7 +55,8 @@ page_t *Paging::get_page(uint32_t address, int make, page_directory_t *dir)
    else if(make)
    {
        uint32_t tmp;
-       dir->tables[table_idx] = (page_table_t*)FrameAlloc::malloc(sizeof(page_table_t), true, &tmp);
+       dir->tables[table_idx] = (page_table_t*)FrameAlloc::get().malloc(
+             sizeof(page_table_t), true, &tmp);
        memset(dir->tables[table_idx], 0, 0x1000);
        dir->tablesPhysical[table_idx] = tmp | 0x7; // PRESENT, RW, US.
        return &dir->tables[table_idx]->pages[address%1024];
@@ -88,7 +78,8 @@ void Paging::page_fault(uint32_t /*isr_num*/, uint32_t err_code)
    int present   = !(err_code & 0x1); // Page not present
    int rw = err_code & 0x2;           // Write operation?
    int us = err_code & 0x4;           // Processor was in user-mode?
-   int reserved = err_code & 0x8;     // Overwritten CPU-reserved bits of page entry?
+   int reserved = err_code & 0x8;     // Overwritten CPU-reserved bits of page
+                                      //entry?
    //int id = err_code & 0x10;          // Caused by an instruction fetch?
 
    // Output an error message.
@@ -113,17 +104,18 @@ void Paging::alloc_frame(page_t *page, int is_kernel, int is_writeable)
    }
    else
    {
-       uint32_t idx = FrameAlloc::first_frame(); // idx is now the index of the first free frame.
+       // idx is now the index of the first free frame.
+       uint32_t idx = FrameAlloc::get().first_frame();
        if (idx == (uint32_t)-1)
        {
            printf("No free frames!");
            abort();
        }
-       Bitmap::set_frame(idx*0x1000); // this frame is now ours!
+       FrameAlloc::get().set_frame(idx); // this frame is now ours!
+       page->frame = idx;
        page->present = 1; // Mark it as present.
        page->rw = (is_writeable)?1:0; // Should the page be writeable?
        page->user = (is_kernel)?0:1; // Should the page be user-mode?
-       page->frame = idx;
    }
 }
 
@@ -137,7 +129,7 @@ void Paging::free_frame(page_t *page)
    }
    else
    {
-       Bitmap::clear_frame(frame); // Frame is now free again.
+       FrameAlloc::get().clear_frame(frame); // Frame is now free again.
        page->frame = 0x0; // Page now doesn't have a frame.
    }
 }
