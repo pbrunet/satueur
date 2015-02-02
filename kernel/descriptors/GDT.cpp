@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------------
 // libc includes
 #include <stdio.h>
+#include <stdlib.h>
 
 // local includes
 #include <descriptors/GDT.hpp>
@@ -47,7 +48,7 @@ void GDT::add_entry(size_t id, uint32_t base, uint32_t limit, uint8_t access,
     if(limit>GDT::MAX_LIMIT)
     {
         printf("Max limit for GDT reached...\n");
-        return;
+        abort();
     }
 
     //Set base

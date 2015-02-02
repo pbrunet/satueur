@@ -10,6 +10,7 @@
 #include <descriptors/GDT.hpp>
 #include <descriptors/IDT.hpp>
 #include <console/Console.hpp>
+#include <memory/paging.hpp>
 
 #ifdef STR_DEBUG
 #include <autotests/AutoTests.hpp>
@@ -63,6 +64,12 @@ void kernel_main(struct multiboot */*mboot_ptr*/)
 #else
     Logger::log("Kernel initialized in normal mode", LOGGER_LOGLEVEL::INFO);
 #endif
+    Paging::initialise_paging();
+
+    uint32_t *ptr = (uint32_t*)0x50000000;
+    uint32_t do_page_fault = *ptr;
+
+    printf("%d", do_page_fault);
 
     //myidt.set_timer(4);
 

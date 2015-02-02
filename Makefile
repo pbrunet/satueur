@@ -20,7 +20,8 @@ CC=$(TARGET)-gcc
 
 CXXFLAGS= -std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
 CFLAGS= -std=c11 -ffreestanding -O2 -Wall -Wextra
-CPPFLAGS= -I kernel -I lib/libc/include
+CPPFLAGS= -I kernel -I lib/libc/include -I lib/libc++/include \
+		  -Wno-packed-bitfield-compat
 LDFLAGS= -lgcc
 
 ifdef STR_DEBUG
